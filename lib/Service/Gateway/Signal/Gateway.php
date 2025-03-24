@@ -32,7 +32,7 @@ use Psr\Log\LoggerInterface;
 use OCP\IUser;
 
 /**
- * An integration of https://gitlab.com/morph027/signal-web-gateway
+ * An integration of https://github.com/bbernhard/signal-cli-rest-api/
  */
 class Gateway implements IGateway {
 
@@ -53,11 +53,15 @@ class Gateway implements IGateway {
 		// determine type of gateway
 		$response = $client->get($this->config->getUrl() . '/v1/about');
 		if ($response->getStatusCode() === 200) {
-			// New style gateway https://gitlab.com/morph027/signal-cli-dbus-rest-api
+			// New style gateway https://github.com/bbernhard/signal-cli-rest-api/
 			$response = $client->post(
-				$this->config->getUrl() . '/v1/send/' . $identifier,
+				$this->config->getUrl() . '/v2/send/',
 				[
-					'json' => [ 'message' => $message ],
+					'json' => [
+						'number' => $this->config->getNumber(),
+						'recipients' => [$identifier],
+						'message' => $message
+					],
 				]
 			);
 			$body = $response->getBody();

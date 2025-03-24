@@ -113,12 +113,15 @@ class Configure extends Command {
 		$helper = $this->getHelper('question');
 		$urlQuestion = new Question('Please enter the URL of the Signal gateway (leave blank to use default): ', 'http://localhost:5000');
 		$url = $helper->ask($input, $output, $urlQuestion);
-		$output->writeln("Using $url.");
+		$numberQuestion = new Question('Please enter the sending number of the Signal gateway: ');
+		$number = $helper->ask($input, $output, $numberQuestion);
+		$output->writeln("Using $url with number $number.");
 
 		/** @var SignalConfig $config */
 		$config = $this->signalGateway->getConfig();
 
 		$config->setUrl($url);
+		$config->setNumber($number);
 	}
 
 	private function configureSms(InputInterface $input, OutputInterface $output) {
